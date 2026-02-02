@@ -217,6 +217,66 @@ class DevAIAPITester:
             f"projects/{self.project_id}/tasks",
             200
         )
+        if success and len(response) > 0:
+            self.task_id = response[0]['id']
+            print(f"   ✓ Task ID stored: {self.task_id}")
+        return success
+
+    def test_task_execution(self):
+        """Test task execution endpoint - should return files_changed array"""
+        if not self.project_id or not hasattr(self, 'task_id'):
+            print("❌ No project ID or task ID available for testing")
+            return False
+            
+        print("   ⚠️  Note: This test may take 30-60 seconds due to AI processing...")
+        success, response = self.run_test(
+            "Execute Task (AI Generation)",
+            "POST",
+            f"projects/{self.project_id}/tasks/{self.task_id}/execute",
+            200
+        )
+        
+        if success:
+            # Check if response contains files_changed array
+            if 'files_changed' in response:
+                files_count = len(response['files_changed'])
+                print(f"   ✓ Files changed array present: {files_count} files")
+                if files_count > 0:
+                    print(f"   ✓ Sample file: {response['files_changed'][0].get('path', 'N/A')}")
+                return True
+            else:
+                print("   ❌ Missing files_changed array in response")
+                return False
+        return success
+
+    def test_list_pull_requests(self):
+        """Test listing pull requests - should return files_changed"""
+        if not self.project_id:
+            print("❌ No project ID available for testing")
+            return False
+            
+        success, response = self.run_test(
+            "List Pull Requests",
+            "GET",
+            f"projects/{self.project_id}/prs",
+            200
+        )
+        
+        if success and len(response) > 0:
+            # Check if PRs contain files_changed array
+            pr = response[0]
+            if 'files_changed' in pr:
+                files_count = len(pr['files_changed'])
+                print(f"   ✓ PR files_changed array present: {files_count} files")
+                if files_count > 0:
+                    print(f"   ✓ Sample PR file: {pr['files_changed'][0].get('path', 'N/A')}")
+                return True
+            else:
+                print("   ❌ Missing files_changed array in PR response")
+                return False
+        elif success:
+            print("   ✓ No PRs yet (expected after task execution)")
+            return True
         return success
 
     def test_settings_get(self):
