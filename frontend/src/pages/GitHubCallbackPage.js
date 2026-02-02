@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LuLoader2 } from 'react-icons/lu';
+import { LuLoader } from 'react-icons/lu';
 import { toast } from 'sonner';
 
 export const GitHubCallbackPage = () => {
