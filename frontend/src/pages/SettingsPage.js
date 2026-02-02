@@ -192,7 +192,7 @@ export const SettingsPage = () => {
                     data-testid="disconnect-github-btn"
                   >
                     {isDisconnecting ? (
-                      <LuLoader2 className="h-4 w-4 animate-spin mr-2" />
+                      <LuLoader className="h-4 w-4 animate-spin mr-2" />
                     ) : null}
                     Disconnect
                   </Button>
