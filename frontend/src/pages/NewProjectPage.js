@@ -356,7 +356,7 @@ export const NewProjectPage = () => {
                 </div>
 
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
-                  <LuAlertCircle className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <LuCircleAlert className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-muted-foreground">
                     We'll automatically detect Laravel, Vue.js, and Flutter projects. 
                     Make sure to include configuration files like composer.json, package.json, or pubspec.yaml.

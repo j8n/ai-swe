@@ -6,7 +6,7 @@ import { FaGithub, FaLaravel, FaVuejs } from 'react-icons/fa';
 import { SiFlutter } from 'react-icons/si';
 import { 
   LuGitPullRequest, 
-  LuCheckSquare, 
+  LuSquareCheck, 
   LuZap, 
   LuBrain,
   LuArrowRight,
@@ -31,7 +31,7 @@ const features = [
     description: 'Get instant project summaries, architecture insights, and improvement suggestions.',
   },
   {
-    icon: LuCheckSquare,
+    icon: LuSquareCheck,
     title: 'Task Management',
     description: 'Create tasks and watch AI implement features, fix bugs, and refactor code.',
   },
