@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Badge } from '../components/ui/badge';
 import { 
   LuUpload, 
-  LuLoader2, 
+  LuLoader, 
   LuCheck,
   LuArrowLeft,
   LuFolderKanban,
