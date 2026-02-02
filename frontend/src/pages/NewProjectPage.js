@@ -14,7 +14,7 @@ import {
   LuCheck,
   LuArrowLeft,
   LuFolderKanban,
-  LuAlertCircle
+  LuCircleAlert
 } from 'react-icons/lu';
 import { FaGithub, FaLaravel, FaVuejs } from 'react-icons/fa';
 import { SiFlutter } from 'react-icons/si';
