@@ -371,7 +371,7 @@ export const NewProjectPage = () => {
                 >
                   {isLoading ? (
                     <>
-                      <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                       Uploading...
                     </>
                   ) : (
@@ -449,7 +449,7 @@ export const NewProjectPage = () => {
                 >
                   {isLoading ? (
                     <>
-                      <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                       Creating...
                     </>
                   ) : (
