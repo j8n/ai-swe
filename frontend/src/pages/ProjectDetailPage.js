@@ -289,7 +289,7 @@ export const ProjectDetailPage = () => {
                         data-testid="analyze-btn"
                       >
                         {analyzing ? (
-                          <LuLoader2 className="h-4 w-4 animate-spin" />
+                          <LuLoader className="h-4 w-4 animate-spin" />
                         ) : (
                           <LuSparkles className="h-4 w-4" />
                         )}
@@ -467,7 +467,7 @@ export const ProjectDetailPage = () => {
                                 data-testid={`execute-task-${task.id}`}
                               >
                                 {executingTaskId === task.id ? (
-                                  <LuLoader2 className="h-4 w-4 animate-spin" />
+                                  <LuLoader className="h-4 w-4 animate-spin" />
                                 ) : (
                                   <LuPlay className="h-4 w-4" />
                                 )}
