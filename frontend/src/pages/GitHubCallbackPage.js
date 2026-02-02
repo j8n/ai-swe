@@ -49,7 +49,7 @@ export const GitHubCallbackPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center noise-bg">
       <div className="text-center">
-        <LuLoader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+        <LuLoader className="h-8 w-8 animate-spin mx-auto mb-4" />
         <p className="text-muted-foreground">Connecting GitHub...</p>
       </div>
     </div>
