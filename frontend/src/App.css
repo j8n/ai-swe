@@ -9,17 +9,6 @@
     }
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
 .App-link {
     color: #61dafb;
 }
@@ -31,4 +20,39 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Markdown prose styles for AI responses */
+.prose pre {
+    @apply bg-zinc-900 rounded-lg p-4 overflow-x-auto my-4;
+}
+
+.prose code {
+    @apply bg-zinc-800 px-1.5 py-0.5 rounded text-sm;
+}
+
+.prose pre code {
+    @apply bg-transparent p-0;
+}
+
+/* Line clamp utility */
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
