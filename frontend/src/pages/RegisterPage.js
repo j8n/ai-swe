@@ -126,7 +126,7 @@ export const RegisterPage = () => {
               <Button type="submit" className="w-full" disabled={isLoading} data-testid="register-submit">
                 {isLoading ? (
                   <>
-                    <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                     Creating account...
                   </>
                 ) : (
