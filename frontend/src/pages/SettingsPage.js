@@ -332,7 +332,7 @@ export const SettingsPage = () => {
               data-testid="save-settings-btn"
             >
               {isSaving ? (
-                <LuLoader2 className="h-4 w-4 animate-spin" />
+                <LuLoader className="h-4 w-4 animate-spin" />
               ) : (
                 <LuCheck className="h-4 w-4" />
               )}
