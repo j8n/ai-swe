@@ -115,7 +115,7 @@ export const SettingsPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen pt-20 noise-bg flex items-center justify-center">
-        <LuLoader2 className="h-8 w-8 animate-spin" />
+        <LuLoader className="h-8 w-8 animate-spin" />
       </div>
     );
   }
