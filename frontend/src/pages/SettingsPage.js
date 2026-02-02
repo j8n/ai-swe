@@ -15,7 +15,7 @@ import {
 import { Switch } from '../components/ui/switch';
 import { Separator } from '../components/ui/separator';
 import { 
-  LuLoader2, 
+  LuLoader, 
   LuCheck, 
   LuExternalLink,
   LuSun,
