@@ -212,7 +212,7 @@ export const SettingsPage = () => {
                     data-testid="connect-github-btn"
                   >
                     {isConnecting ? (
-                      <LuLoader2 className="h-4 w-4 animate-spin" />
+                      <LuLoader className="h-4 w-4 animate-spin" />
                     ) : (
                       <FaGithub className="h-4 w-4" />
                     )}
