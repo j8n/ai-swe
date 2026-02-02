@@ -40,7 +40,7 @@ import {
   LuPlus, 
   LuLoader,
   LuBrain,
-  LuCheckSquare,
+  LuSquareCheck,
   LuGitPullRequest,
   LuPlay,
   LuTrash2,
@@ -264,7 +264,7 @@ export const ProjectDetailPage = () => {
               Overview
             </TabsTrigger>
             <TabsTrigger value="tasks" className="gap-2">
-              <LuCheckSquare className="h-4 w-4" />
+              <LuSquareCheck className="h-4 w-4" />
               Tasks ({tasks.length})
             </TabsTrigger>
             <TabsTrigger value="prs" className="gap-2">
@@ -489,7 +489,7 @@ export const ProjectDetailPage = () => {
                   </div>
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
-                    <LuCheckSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <LuSquareCheck className="h-8 w-8 mx-auto mb-2 opacity-50" />
                     <p>No tasks yet</p>
                     <p className="text-sm mt-1">Create a task to start AI development</p>
                   </div>

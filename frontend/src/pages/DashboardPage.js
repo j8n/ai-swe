@@ -7,7 +7,7 @@ import { Badge } from '../components/ui/badge';
 import { Skeleton } from '../components/ui/skeleton';
 import { 
   LuFolderKanban, 
-  LuCheckSquare, 
+  LuSquareCheck, 
   LuGitPullRequest, 
   LuPlus,
   LuArrowRight,
@@ -108,7 +108,7 @@ export const DashboardPage = () => {
                   <p className="text-3xl font-bold mt-1">{stats?.tasks?.total || 0}</p>
                 </div>
                 <div className="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center">
-                  <LuCheckSquare className="h-6 w-6 text-yellow-500" />
+                  <LuSquareCheck className="h-6 w-6 text-yellow-500" />
                 </div>
               </div>
               <div className="flex gap-2 mt-3">
@@ -262,7 +262,7 @@ export const DashboardPage = () => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  <LuCheckSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <LuSquareCheck className="h-8 w-8 mx-auto mb-2 opacity-50" />
                   <p>No tasks yet</p>
                   <p className="text-sm mt-1">Create a project to add tasks</p>
                 </div>
