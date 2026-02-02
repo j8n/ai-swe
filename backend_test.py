@@ -340,6 +340,8 @@ def main():
         ("Get Project Details", tester.test_get_project),
         ("Create Task", tester.test_create_task),
         ("List Tasks", tester.test_list_tasks),
+        ("Execute Task (AI)", tester.test_task_execution),
+        ("List Pull Requests", tester.test_list_pull_requests),
         ("Get Settings", tester.test_settings_get),
         ("Update Settings", tester.test_settings_update),
         ("GitHub Auth URL (Expected Fail)", tester.test_github_auth_url),
