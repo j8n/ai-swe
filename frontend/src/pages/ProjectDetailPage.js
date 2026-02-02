@@ -38,7 +38,7 @@ import {
 import { 
   LuArrowLeft, 
   LuPlus, 
-  LuLoader2,
+  LuLoader,
   LuBrain,
   LuCheckSquare,
   LuGitPullRequest,
