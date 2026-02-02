@@ -414,7 +414,7 @@ export const ProjectDetailPage = () => {
                           data-testid="create-task-submit"
                         >
                           {creatingTask ? (
-                            <LuLoader2 className="h-4 w-4 animate-spin mr-2" />
+                            <LuLoader className="h-4 w-4 animate-spin mr-2" />
                           ) : null}
                           Create Task
                         </Button>
