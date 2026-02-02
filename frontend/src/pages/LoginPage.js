@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { toast } from 'sonner';
-import { LuEye, LuEyeOff, LuLoader2 } from 'react-icons/lu';
+import { LuEye, LuEyeOff, LuLoader } from 'react-icons/lu';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
