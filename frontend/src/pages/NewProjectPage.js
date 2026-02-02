@@ -213,7 +213,7 @@ export const NewProjectPage = () => {
                     
                     {reposLoading ? (
                       <div className="flex justify-center py-8">
-                        <LuLoader2 className="h-6 w-6 animate-spin" />
+                        <LuLoader className="h-6 w-6 animate-spin" />
                       </div>
                     ) : (
                       <div className="max-h-80 overflow-y-auto space-y-2">
