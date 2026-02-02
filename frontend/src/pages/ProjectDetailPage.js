@@ -71,14 +71,11 @@ export const ProjectDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   
-  // Task dialog state
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState('medium');
   const [creatingTask, setCreatingTask] = useState(false);
-  
-  // Executing task state
   const [executingTaskId, setExecutingTaskId] = useState(null);
 
   useEffect(() => {
@@ -193,13 +190,8 @@ export const ProjectDetailPage = () => {
   return (
     <div className="min-h-screen pt-20 noise-bg" data-testid="project-detail-page">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate('/projects')}
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate('/projects')}>
             <LuArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
@@ -238,7 +230,6 @@ export const ProjectDetailPage = () => {
           </AlertDialog>
         </div>
 
-        {/* Tech Stack */}
         {project?.tech_stack?.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
             {project.tech_stack.map((tech) => {
@@ -269,11 +260,10 @@ export const ProjectDetailPage = () => {
             </TabsTrigger>
             <TabsTrigger value="prs" className="gap-2">
               <LuGitPullRequest className="h-4 w-4" />
-              Pull Requests ({prs.length})
+              PRs ({prs.length})
             </TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
           <TabsContent value="overview">
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>
@@ -281,33 +271,17 @@ export const ProjectDetailPage = () => {
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">AI Analysis</CardTitle>
                     {!project?.summary && (
-                      <Button 
-                        size="sm" 
-                        onClick={handleAnalyze}
-                        disabled={analyzing}
-                        className="gap-2"
-                        data-testid="analyze-btn"
-                      >
-                        {analyzing ? (
-                          <LuLoader className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <LuSparkles className="h-4 w-4" />
-                        )}
+                      <Button size="sm" onClick={handleAnalyze} disabled={analyzing} className="gap-2" data-testid="analyze-btn">
+                        {analyzing ? <LuLoader className="h-4 w-4 animate-spin" /> : <LuSparkles className="h-4 w-4" />}
                         {analyzing ? 'Analyzing...' : 'Analyze'}
                       </Button>
                     )}
                   </div>
-                  <CardDescription>
-                    AI-generated summary of your project
-                  </CardDescription>
+                  <CardDescription>AI-generated summary of your project</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {project?.summary ? (
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <div className="whitespace-pre-wrap text-sm text-muted-foreground">
-                        {project.summary}
-                      </div>
-                    </div>
+                    <div className="whitespace-pre-wrap text-sm text-muted-foreground">{project.summary}</div>
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
                       <LuBrain className="h-8 w-8 mx-auto mb-2 opacity-50" />
@@ -332,29 +306,20 @@ export const ProjectDetailPage = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Created</p>
-                    <p className="mt-1">
-                      {new Date(project?.created_at).toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </p>
+                    <p className="mt-1">{new Date(project?.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                   </div>
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
 
-          {/* Tasks Tab */}
           <TabsContent value="tasks">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg">Tasks</CardTitle>
-                    <CardDescription>
-                      Create tasks for AI to implement
-                    </CardDescription>
+                    <CardDescription>Create tasks for AI to implement</CardDescription>
                   </div>
                   <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
                     <DialogTrigger asChild>
@@ -366,29 +331,16 @@ export const ProjectDetailPage = () => {
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Create New Task</DialogTitle>
-                        <DialogDescription>
-                          Describe the feature or bug fix you want AI to implement
-                        </DialogDescription>
+                        <DialogDescription>Describe the feature or bug fix</DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
                         <div className="space-y-2">
                           <label className="text-sm font-medium">Title</label>
-                          <Input
-                            placeholder="Add user authentication"
-                            value={newTaskTitle}
-                            onChange={(e) => setNewTaskTitle(e.target.value)}
-                            data-testid="task-title-input"
-                          />
+                          <Input placeholder="Add user authentication" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} data-testid="task-title-input" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-sm font-medium">Description</label>
-                          <Textarea
-                            placeholder="Implement JWT-based authentication with login and register endpoints..."
-                            value={newTaskDescription}
-                            onChange={(e) => setNewTaskDescription(e.target.value)}
-                            rows={4}
-                            data-testid="task-description-input"
-                          />
+                          <Textarea placeholder="Implementation details..." value={newTaskDescription} onChange={(e) => setNewTaskDescription(e.target.value)} rows={4} data-testid="task-description-input" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-sm font-medium">Priority</label>
@@ -405,17 +357,9 @@ export const ProjectDetailPage = () => {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setTaskDialogOpen(false)}>
-                          Cancel
-                        </Button>
-                        <Button 
-                          onClick={handleCreateTask} 
-                          disabled={!newTaskTitle.trim() || creatingTask}
-                          data-testid="create-task-submit"
-                        >
-                          {creatingTask ? (
-                            <LuLoader className="h-4 w-4 animate-spin mr-2" />
-                          ) : null}
+                        <Button variant="outline" onClick={() => setTaskDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handleCreateTask} disabled={!newTaskTitle.trim() || creatingTask} data-testid="create-task-submit">
+                          {creatingTask && <LuLoader className="h-4 w-4 animate-spin mr-2" />}
                           Create Task
                         </Button>
                       </DialogFooter>
@@ -427,59 +371,30 @@ export const ProjectDetailPage = () => {
                 {tasks.length > 0 ? (
                   <div className="space-y-3">
                     {tasks.map((task) => (
-                      <div
-                        key={task.id}
-                        className="p-4 rounded-lg border border-border hover:border-primary/30 transition-colors"
-                        data-testid={`task-${task.id}`}
-                      >
+                      <div key={task.id} className="p-4 rounded-lg border border-border hover:border-primary/30 transition-colors" data-testid={`task-${task.id}`}>
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
                               <h4 className="font-medium">{task.title}</h4>
-                              <Badge variant="outline" className={`status-${task.status}`}>
-                                {task.status.replace('_', ' ')}
-                              </Badge>
-                              <Badge variant="outline" className={`priority-${task.priority}`}>
-                                {task.priority}
-                              </Badge>
+                              <Badge variant="outline" className={`status-${task.status}`}>{task.status.replace('_', ' ')}</Badge>
+                              <Badge variant="outline" className={`priority-${task.priority}`}>{task.priority}</Badge>
                             </div>
-                            {task.description && (
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {task.description}
-                              </p>
-                            )}
+                            {task.description && <p className="text-sm text-muted-foreground mt-1">{task.description}</p>}
                             {task.ai_response && (
                               <div className="mt-3 p-3 rounded-lg bg-muted/50">
                                 <p className="text-xs text-muted-foreground mb-1">AI Response:</p>
-                                <pre className="text-sm whitespace-pre-wrap font-mono text-xs max-h-40 overflow-y-auto">
-                                  {task.ai_response}
-                                </pre>
+                                <pre className="text-xs whitespace-pre-wrap font-mono max-h-40 overflow-y-auto">{task.ai_response}</pre>
                               </div>
                             )}
                           </div>
                           <div className="flex items-center gap-2">
                             {task.status === 'pending' && (
-                              <Button
-                                size="sm"
-                                onClick={() => handleExecuteTask(task.id)}
-                                disabled={executingTaskId === task.id}
-                                className="gap-1"
-                                data-testid={`execute-task-${task.id}`}
-                              >
-                                {executingTaskId === task.id ? (
-                                  <LuLoader className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <LuPlay className="h-4 w-4" />
-                                )}
+                              <Button size="sm" onClick={() => handleExecuteTask(task.id)} disabled={executingTaskId === task.id} className="gap-1" data-testid={`execute-task-${task.id}`}>
+                                {executingTaskId === task.id ? <LuLoader className="h-4 w-4 animate-spin" /> : <LuPlay className="h-4 w-4" />}
                                 Execute
                               </Button>
                             )}
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleDeleteTask(task.id)}
-                              data-testid={`delete-task-${task.id}`}
-                            >
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteTask(task.id)} data-testid={`delete-task-${task.id}`}>
                               <LuTrash2 className="h-4 w-4" />
                             </Button>
                           </div>
@@ -498,54 +413,32 @@ export const ProjectDetailPage = () => {
             </Card>
           </TabsContent>
 
-          {/* PRs Tab */}
           <TabsContent value="prs">
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Pull Requests</CardTitle>
-                <CardDescription>
-                  AI-generated pull requests for completed tasks
-                </CardDescription>
+                <CardDescription>AI-generated pull requests for completed tasks</CardDescription>
               </CardHeader>
               <CardContent>
                 {prs.length > 0 ? (
                   <div className="space-y-3">
                     {prs.map((pr) => (
-                      <div
-                        key={pr.id}
-                        className="p-4 rounded-lg border border-border hover:border-primary/30 transition-colors"
-                      >
+                      <div key={pr.id} className="p-4 rounded-lg border border-border hover:border-primary/30 transition-colors">
                         <div className="flex items-start justify-between">
                           <div>
                             <div className="flex items-center gap-2">
-                              <LuGitPullRequest className={`h-4 w-4 ${
-                                pr.status === 'open' ? 'text-green-500' :
-                                pr.status === 'merged' ? 'text-purple-500' : 'text-gray-500'
-                              }`} />
+                              <LuGitPullRequest className={`h-4 w-4 ${pr.status === 'open' ? 'text-green-500' : pr.status === 'merged' ? 'text-purple-500' : 'text-gray-500'}`} />
                               <h4 className="font-medium">{pr.title}</h4>
-                              <Badge variant="outline" className={`status-${pr.status}`}>
-                                {pr.status}
-                              </Badge>
+                              <Badge variant="outline" className={`status-${pr.status}`}>{pr.status}</Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {pr.branch_name} → {pr.base_branch}
-                            </p>
+                            <p className="text-sm text-muted-foreground mt-1">{pr.branch_name} → {pr.base_branch}</p>
                             {pr.github_pr_url && (
-                              <a 
-                                href={pr.github_pr_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-primary hover:underline mt-1 inline-block"
-                              >
+                              <a href={pr.github_pr_url} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline mt-1 inline-block">
                                 View on GitHub →
                               </a>
                             )}
                           </div>
-                          {pr.status === 'open' && (
-                            <Button size="sm" variant="outline">
-                              Merge
-                            </Button>
-                          )}
+                          {pr.status === 'open' && <Button size="sm" variant="outline">Merge</Button>}
                         </div>
                       </div>
                     ))}
