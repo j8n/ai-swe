@@ -1527,7 +1527,8 @@ Generate complete, working code that can be directly committed to the repository
                         }
                         
                         await db.pull_requests.insert_one(pr_doc)
-                        pr_data = pr_doc
+                        # Remove MongoDB _id before returning
+                        pr_data = {k: v for k, v in pr_doc.items() if k != "_id"}
         
         # For uploaded/manual projects, save files directly to project
         elif project["source_type"] in ["upload", "manual"] and files_changed:
