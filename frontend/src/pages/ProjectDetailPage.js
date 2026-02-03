@@ -65,6 +65,7 @@ function TasksList({ tasks, onExecute, onDelete, executingTaskId }) {
         const fc = task.files_changed || [];
         const isExp = expanded[task.id];
         const isRunning = executingTaskId === task.id;
+        const canExecute = task.status === 'pending' || task.status === 'failed';
         return (
           <div key={task.id} className="p-4 rounded-lg border border-border" data-testid={'task-' + task.id}>
             <div className="flex items-start justify-between gap-4">
@@ -82,10 +83,10 @@ function TasksList({ tasks, onExecute, onDelete, executingTaskId }) {
                 {isExp && fc.length > 0 && <div className="mt-3"><p className="text-xs text-muted-foreground mb-2">Generated Files:</p><FilesList files={fc} /></div>}
               </div>
               <div className="flex items-center gap-2">
-                {task.status === 'pending' && (
-                  <Button size="sm" onClick={() => onExecute(task.id)} disabled={isRunning}>
-                    {isRunning ? <LuLoader className="h-4 w-4 animate-spin mr-1" /> : <LuPlay className="h-4 w-4 mr-1" />}
-                    {isRunning ? 'Running...' : 'Execute'}
+                {canExecute && (
+                  <Button size="sm" onClick={() => onExecute(task.id)} disabled={isRunning} variant={task.status === 'failed' ? 'outline' : 'default'}>
+                    {isRunning ? <LuLoader className="h-4 w-4 animate-spin mr-1" /> : task.status === 'failed' ? <LuRotateCcw className="h-4 w-4 mr-1" /> : <LuPlay className="h-4 w-4 mr-1" />}
+                    {isRunning ? 'Running...' : task.status === 'failed' ? 'Retry' : 'Execute'}
                   </Button>
                 )}
                 <Button size="sm" variant="ghost" onClick={() => onDelete(task.id)}><LuTrash2 className="h-4 w-4" /></Button>
