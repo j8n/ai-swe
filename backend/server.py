@@ -1012,7 +1012,15 @@ async def upload_project(
     
     content = await file.read()
     files_data = []
+    file_list = []  # Just paths for large projects
     tech_stack = set()
+    total_content_size = 0
+    MAX_TOTAL_SIZE = 10 * 1024 * 1024  # 10MB limit for stored content
+    MAX_FILE_SIZE = 50000  # 50KB per file
+    MAX_FILES_WITH_CONTENT = 100  # Max files to store content for
+    
+    # Skip patterns for common non-essential directories
+    skip_dirs = ['node_modules', 'vendor', '.git', '__pycache__', 'build', 'dist', '.idea', '.vscode', 'coverage']
     
     try:
         with zipfile.ZipFile(io.BytesIO(content)) as zf:
@@ -1021,11 +1029,26 @@ async def upload_project(
                     continue
                 
                 filename = file_info.filename
+                
+                # Skip hidden files
                 if any(part.startswith('.') for part in filename.split('/')):
                     continue
-                if any(filename.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg', '.woff', '.woff2', '.ttf', '.eot']):
+                
+                # Skip common dependency/build directories
+                if any(skip_dir in filename.split('/') for skip_dir in skip_dirs):
                     continue
                 
+                # Skip binary/media files
+                skip_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg', '.woff', '.woff2', 
+                                  '.ttf', '.eot', '.mp3', '.mp4', '.zip', '.tar', '.gz', '.pdf', 
+                                  '.exe', '.dll', '.so', '.dylib', '.class', '.pyc', '.lock']
+                if any(filename.lower().endswith(ext) for ext in skip_extensions):
+                    continue
+                
+                # Add to file list (for reference)
+                file_list.append({"path": filename, "size": file_info.file_size})
+                
+                # Detect tech stack
                 if filename.endswith('.php') or 'laravel' in filename.lower():
                     tech_stack.add('Laravel')
                     tech_stack.add('PHP')
@@ -1041,18 +1064,25 @@ async def upload_project(
                 if filename.endswith('.py'):
                     tech_stack.add('Python')
                 
-                if file_info.file_size < 100000:
+                # Store content only for small files within limits
+                if (file_info.file_size < MAX_FILE_SIZE and 
+                    total_content_size < MAX_TOTAL_SIZE and 
+                    len(files_data) < MAX_FILES_WITH_CONTENT):
                     try:
                         file_content = zf.read(filename).decode('utf-8', errors='ignore')
+                        truncated_content = file_content[:MAX_FILE_SIZE]
                         files_data.append({
                             "path": filename,
-                            "content": file_content[:50000],
+                            "content": truncated_content,
                             "size": file_info.file_size
                         })
+                        total_content_size += len(truncated_content)
                     except Exception:
                         pass
     except zipfile.BadZipFile:
         raise HTTPException(status_code=400, detail="Invalid ZIP file")
+    
+    logger.info(f"Uploaded project: {len(file_list)} files found, {len(files_data)} with content stored")
     
     project_doc = {
         "id": project_id,
