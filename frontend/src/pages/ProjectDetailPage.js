@@ -16,6 +16,234 @@ import { LuArrowLeft, LuPlus, LuLoader, LuBrain, LuSquareCheck, LuGitPullRequest
 import { FaGithub } from 'react-icons/fa';
 import { toast } from 'sonner';
 
+// Helper to get file extension color
+function getFileColor(filename) {
+  const ext = filename.split('.').pop()?.toLowerCase();
+  const colors = {
+    'php': 'text-indigo-400',
+    'vue': 'text-emerald-400',
+    'js': 'text-yellow-400',
+    'jsx': 'text-yellow-400',
+    'ts': 'text-blue-400',
+    'tsx': 'text-blue-400',
+    'dart': 'text-cyan-400',
+    'py': 'text-green-400',
+    'json': 'text-orange-400',
+    'css': 'text-pink-400',
+    'html': 'text-red-400',
+    'md': 'text-gray-400',
+  };
+  return colors[ext] || 'text-primary';
+}
+
+// Build tree structure from flat file list
+function buildFileTree(files) {
+  const tree = {};
+  
+  files.forEach(file => {
+    const parts = file.path.split('/');
+    let current = tree;
+    
+    parts.forEach((part, idx) => {
+      if (idx === parts.length - 1) {
+        // File
+        current[part] = { type: 'file', ...file };
+      } else {
+        // Directory
+        if (!current[part]) {
+          current[part] = { type: 'dir', children: {} };
+        }
+        current = current[part].children;
+      }
+    });
+  });
+  
+  return tree;
+}
+
+// File tree node component
+function FileTreeNode({ name, node, level, onFileClick, selectedFile }) {
+  const [expanded, setExpanded] = useState(level < 2);
+  const isDir = node.type === 'dir';
+  const isSelected = !isDir && node.path === selectedFile;
+  const padding = level * 16;
+  
+  if (isDir) {
+    const children = Object.entries(node.children).sort((a, b) => {
+      // Directories first, then files
+      if (a[1].type !== b[1].type) return a[1].type === 'dir' ? -1 : 1;
+      return a[0].localeCompare(b[0]);
+    });
+    
+    return (
+      <div>
+        <button
+          className="w-full flex items-center gap-1 py-1 px-2 hover:bg-muted/50 rounded text-left text-sm"
+          style={{ paddingLeft: padding }}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? <LuChevronDown className="h-3 w-3 flex-shrink-0" /> : <LuChevronRight className="h-3 w-3 flex-shrink-0" />}
+          {expanded ? <LuFolderOpen className="h-4 w-4 text-yellow-500 flex-shrink-0" /> : <LuFolder className="h-4 w-4 text-yellow-500 flex-shrink-0" />}
+          <span className="truncate">{name}</span>
+        </button>
+        {expanded && children.map(([childName, childNode]) => (
+          <FileTreeNode
+            key={childName}
+            name={childName}
+            node={childNode}
+            level={level + 1}
+            onFileClick={onFileClick}
+            selectedFile={selectedFile}
+          />
+        ))}
+      </div>
+    );
+  }
+  
+  return (
+    <button
+      className={`w-full flex items-center gap-1 py-1 px-2 hover:bg-muted/50 rounded text-left text-sm ${isSelected ? 'bg-primary/20 text-primary' : ''}`}
+      style={{ paddingLeft: padding }}
+      onClick={() => onFileClick(node)}
+    >
+      <span className="w-3" />
+      <LuFile className={`h-4 w-4 flex-shrink-0 ${getFileColor(name)}`} />
+      <span className="truncate">{name}</span>
+    </button>
+  );
+}
+
+// File Browser component
+function FileBrowser({ projectId, api, sourceType }) {
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileContent, setFileContent] = useState('');
+  const [loadingContent, setLoadingContent] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  useEffect(() => {
+    api.get('/projects/' + projectId + '/files')
+      .then(r => {
+        setFiles(r.data.files || []);
+      })
+      .catch(() => toast.error('Failed to load files'))
+      .finally(() => setLoading(false));
+  }, [api, projectId]);
+  
+  const handleFileClick = (file) => {
+    setSelectedFile(file.path);
+    
+    // Check if content is already available
+    if (file.content) {
+      setFileContent(file.content);
+      return;
+    }
+    
+    // Fetch content from API
+    setLoadingContent(true);
+    api.get('/projects/' + projectId + '/files/' + encodeURIComponent(file.path))
+      .then(r => setFileContent(r.data.content || ''))
+      .catch(() => {
+        setFileContent('// Unable to load file content');
+        toast.error('Failed to load file');
+      })
+      .finally(() => setLoadingContent(false));
+  };
+  
+  const filteredFiles = searchQuery
+    ? files.filter(f => f.path.toLowerCase().includes(searchQuery.toLowerCase()))
+    : files;
+  
+  const fileTree = buildFileTree(filteredFiles);
+  const treeEntries = Object.entries(fileTree).sort((a, b) => {
+    if (a[1].type !== b[1].type) return a[1].type === 'dir' ? -1 : 1;
+    return a[0].localeCompare(b[0]);
+  });
+  
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <LuLoader className="h-6 w-6 animate-spin" />
+      </div>
+    );
+  }
+  
+  if (files.length === 0) {
+    return (
+      <div className="text-center py-12 text-muted-foreground">
+        <LuFolder className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <p>No files found</p>
+        <p className="text-sm mt-1">Upload a project or connect GitHub to view files</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[600px]">
+      {/* File Tree */}
+      <div className="border border-border rounded-lg overflow-hidden flex flex-col">
+        <div className="p-2 border-b border-border">
+          <div className="relative">
+            <LuSearch className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search files..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 h-8 text-sm"
+            />
+          </div>
+        </div>
+        <ScrollArea className="flex-1">
+          <div className="p-2">
+            {treeEntries.map(([name, node]) => (
+              <FileTreeNode
+                key={name}
+                name={name}
+                node={node}
+                level={0}
+                onFileClick={handleFileClick}
+                selectedFile={selectedFile}
+              />
+            ))}
+          </div>
+        </ScrollArea>
+        <div className="p-2 border-t border-border text-xs text-muted-foreground">
+          {files.length} files
+        </div>
+      </div>
+      
+      {/* File Content */}
+      <div className="lg:col-span-2 border border-border rounded-lg overflow-hidden flex flex-col">
+        {selectedFile ? (
+          <>
+            <div className="p-3 border-b border-border flex items-center gap-2 bg-muted/30">
+              <LuFile className={`h-4 w-4 ${getFileColor(selectedFile)}`} />
+              <span className="font-mono text-sm truncate">{selectedFile}</span>
+            </div>
+            <ScrollArea className="flex-1 bg-zinc-950">
+              {loadingContent ? (
+                <div className="flex items-center justify-center py-12">
+                  <LuLoader className="h-5 w-5 animate-spin text-zinc-500" />
+                </div>
+              ) : (
+                <pre className="p-4 text-sm text-zinc-300 font-mono whitespace-pre-wrap">{fileContent}</pre>
+              )}
+            </ScrollArea>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-muted-foreground">
+            <div className="text-center">
+              <LuFileCode className="h-12 w-12 mx-auto mb-2 opacity-30" />
+              <p>Select a file to view its content</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function FileItem({ file }) {
   const [open, setOpen] = useState(false);
   return (
