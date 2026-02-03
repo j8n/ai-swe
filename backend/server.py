@@ -1141,14 +1141,54 @@ async def get_project(project_id: str, current_user: dict = Depends(get_current_
 
 @api_router.get("/projects/{project_id}/files")
 async def get_project_files(project_id: str, current_user: dict = Depends(get_current_user)):
-    """Get list of files in a project"""
+    """Get all files in a project with content"""
     project = await db.projects.find_one({"id": project_id, "user_id": current_user["id"]}, {"_id": 0})
     
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
     files = project.get("files", [])
-    return {"files": [{"path": f["path"], "size": f.get("size", 0)} for f in files]}
+    file_list = project.get("file_list", [])
+    
+    # Build a tree structure
+    return {
+        "files": [{"path": f["path"], "content": f.get("content", ""), "size": f.get("size", 0)} for f in files],
+        "file_list": file_list,  # All file paths (may not have content for large projects)
+        "source_type": project.get("source_type"),
+        "github_owner": project.get("github_owner"),
+        "github_repo": project.get("github_repo")
+    }
+
+@api_router.get("/projects/{project_id}/files/{file_path:path}")
+async def get_project_file(project_id: str, file_path: str, current_user: dict = Depends(get_current_user)):
+    """Get a specific file content"""
+    project = await db.projects.find_one({"id": project_id, "user_id": current_user["id"]}, {"_id": 0})
+    
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # For GitHub projects, fetch from GitHub API
+    if project.get("source_type") == "github":
+        user = await db.users.find_one({"id": current_user["id"]}, {"_id": 0})
+        if user.get("github_access_token"):
+            gh = GitHubService(user["github_access_token"])
+            file_data = await gh.get_file_content(
+                project["github_owner"], 
+                project["github_repo"], 
+                file_path,
+                project.get("github_default_branch", "main")
+            )
+            if file_data:
+                return {"path": file_path, "content": file_data["content"], "source": "github"}
+        raise HTTPException(status_code=404, detail="File not found or GitHub not connected")
+    
+    # For uploaded projects, look in stored files
+    files = project.get("files", [])
+    for f in files:
+        if f["path"] == file_path:
+            return {"path": file_path, "content": f.get("content", ""), "source": "local"}
+    
+    raise HTTPException(status_code=404, detail="File not found")
 
 @api_router.delete("/projects/{project_id}")
 async def delete_project(project_id: str, current_user: dict = Depends(get_current_user)):
