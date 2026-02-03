@@ -470,6 +470,7 @@ export function ProjectDetailPage() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview" className="gap-2"><LuBrain className="h-4 w-4" />Overview</TabsTrigger>
+            <TabsTrigger value="files" className="gap-2"><LuFolder className="h-4 w-4" />Files</TabsTrigger>
             <TabsTrigger value="tasks" className="gap-2"><LuSquareCheck className="h-4 w-4" />Tasks ({tasks.length})</TabsTrigger>
             <TabsTrigger value="prs" className="gap-2"><LuGitPullRequest className="h-4 w-4" />PRs ({prs.length})</TabsTrigger>
           </TabsList>
@@ -487,6 +488,17 @@ export function ProjectDetailPage() {
               </Card>
               <Card><CardHeader><CardTitle className="text-lg">Details</CardTitle></CardHeader><CardContent className="space-y-4"><div><p className="text-sm text-muted-foreground">Description</p><p className="mt-1">{pd}</p></div><div><p className="text-sm text-muted-foreground">Source</p><p className="mt-1 capitalize">{pst}</p></div><div><p className="text-sm text-muted-foreground">Created</p><p className="mt-1">{pca}</p></div></CardContent></Card>
             </div>
+          </TabsContent>
+          <TabsContent value="files">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Project Files</CardTitle>
+                <CardDescription>Browse and view source code files</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FileBrowser projectId={projectId} api={api} sourceType={pst} />
+              </CardContent>
+            </Card>
           </TabsContent>
           <TabsContent value="tasks">
             <Card>
