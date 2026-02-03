@@ -1094,8 +1094,9 @@ async def upload_project(
         "github_repo": None,
         "github_owner": None,
         "summary": None,
-        "file_count": len(files_data),
+        "file_count": len(file_list),
         "files": files_data,
+        "file_list": file_list,  # Full list of file paths
         "status": "analyzing",
         "created_at": now,
         "updated_at": now
