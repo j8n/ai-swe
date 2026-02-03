@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../components/ui/alert-dialog';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { LuArrowLeft, LuPlus, LuLoader, LuBrain, LuSquareCheck, LuGitPullRequest, LuPlay, LuTrash2, LuFileCode, LuSparkles, LuFile, LuGitBranch, LuExternalLink, LuCheck, LuChevronDown, LuChevronRight } from 'react-icons/lu';
+import { LuArrowLeft, LuPlus, LuLoader, LuBrain, LuSquareCheck, LuGitPullRequest, LuPlay, LuTrash2, LuFileCode, LuSparkles, LuFile, LuGitBranch, LuExternalLink, LuCheck, LuChevronDown, LuChevronRight, LuRotateCcw } from 'react-icons/lu';
 import { FaGithub } from 'react-icons/fa';
 import { toast } from 'sonner';
 
